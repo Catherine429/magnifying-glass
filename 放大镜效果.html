@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .div1 {
+            position: relative;
+        }
+        img {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .small {
+            width: 210px;
+            height: 210px;
+            position: absolute;
+            left: 5px;
+            top: 5px;
+        }
+        .small .mark {
+            width: 210px;
+            height: 210px;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+        }
+        .small img {
+            left: 5px;
+            top: 5px;
+        }
+        .small .chosen {
+            width: 50px;
+            height: 50px;
+            filter: alpha(opacity:50);
+            background: white;
+            opacity: 0.5;
+            position: absolute;
+            z-index: 3;
+        }
+        .big {
+            width: 250px;
+            height: 250px;
+            position: absolute;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            display: block;
+            left: 220px;
+            top: 5px;
+        }
+    </style>
+    <script>
+        function getByClass(obj, name) {
+            var aEle = obj.getElementsByTagName('*');
+            var aTemp = [];
+
+            for(var i=0; i<aEle.length; i++) {
+                if(aEle[i].className == name) {
+                    aTemp.push(aEle[i]);
+                }
+            }
+            return aTemp;
+        }
+        window.onload = function () {
+            var oSmallDiv = document.getElementById('smallPic');
+            var oChosen = getByClass(oSmallDiv, 'chosen')[0];
+            var oSmallPic = oSmallDiv.getElementsByTagName('img')[0];
+            var oBigDiv = document.getElementById('bigPic');
+            var oBigPic = oBigDiv.getElementsByTagName('img')[0];
+
+            oSmallDiv.onmouseover = function () {
+                oChosen.style.display = 'block';
+                oBigDiv.style.display = 'block';
+            }
+            
+            oSmallDiv.onmousemove = function (ev) {
+                var oEvent = ev || event;
+
+                var l = oEvent.clientX - oChosen.offsetWidth/2;
+                var t = oEvent.clientY - oChosen.offsetHeight/2;
+
+                if(l<oSmallPic.offsetLeft) {
+                    l=oSmallPic.offsetLeft;
+                } else if(l>oSmallDiv.offsetWidth-oSmallPic.offsetLeft - oChosen.offsetWidth) {
+                    l = oSmallDiv.offsetWidth-oSmallPic.offsetLeft - oChosen.offsetWidth;
+                }
+
+                if(t < oSmallPic.offsetTop) {
+                    t = oSmallPic.offsetTop
+                } else if(t>oSmallDiv.offsetHeight - oSmallPic.offsetTop - oChosen.offsetWidth) {
+                    t=oSmallDiv.offsetHeight - oSmallPic.offsetTop - oChosen.offsetWidth
+                }
+
+                oChosen.style.left = l + 'px';
+                oChosen.style.top = t + 'px';
+
+                var scaleX = (oChosen.offsetLeft-oSmallPic.offsetLeft)/(oSmallPic.offsetWidth - oChosen.offsetWidth);
+                var scaleY = (oChosen.offsetTop - oSmallPic.offsetTop)/(oSmallPic.offsetHeight-oChosen.offsetHeight);
+                document.title = scaleY;
+                oBigPic.style.left = -(oBigPic.offsetWidth-oBigDiv.offsetWidth) * scaleX + 'px';
+                oBigPic.style.top = -(oBigPic.offsetHeight-oBigDiv.offsetHeight) * scaleY + 'px';
+            }
+
+            oSmallDiv.onmouseout = function () {
+                oChosen.style.display = 'none';
+                oBigDiv.style.display = 'none';
+            }
+
+        }
+    </script>
+</head>
+<body>
+<div class="div1">
+
+    <div class="small" id="smallPic">
+        <span class="mark"></span>
+        <span class="chosen"></span>
+        <img src="images/small.png" alt="">
+
+    </div>
+    <div class="big" id="bigPic">
+        <img src="images/big.png" alt="">
+    </div>
+</div>
+</body>
+</html>
