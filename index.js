@@ -25,6 +25,7 @@ window.onload = function () {
     }
 
     oSmallDiv.onmousemove = function (ev) {
+        
         var oEvent = ev || event;
 
         var l = oEvent.clientX - oChosen.offsetWidth/2;
